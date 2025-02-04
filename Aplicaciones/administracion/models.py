@@ -9,7 +9,8 @@ class Asistencia(models.Model):
     valor_atraso_asi = models.DecimalField(max_digits=10, decimal_places=2)
     creacion_asi = models.DateTimeField(blank=True, null=True)
     actualizacion_asi = models.DateTimeField(blank=True, null=True)
-
+    def __str__(self):
+        return f"{self.tipo_asi} - {self.valor_asi}"
     class Meta:
         managed = False
         db_table = 'asistencia'
@@ -20,7 +21,8 @@ class Comunicado(models.Model):
     mensaje_com = models.CharField(max_length=200)
     actualizacion_com = models.DateTimeField(blank=True, null=True)
     creacion_com = models.DateTimeField(blank=True, null=True)
-
+    def __str__(self):
+        return self.mensaje_com
     class Meta:
         managed = False
         db_table = 'comunicado'
@@ -41,7 +43,8 @@ class Configuracion(models.Model):
     actualizacion_con = models.DateTimeField(blank=True, null=True)
     anio_inicial_con = models.CharField(max_length=15, blank=True, null=True)
     mes_inicial_con = models.CharField(max_length=25, blank=True, null=True)
-
+    def __str__(self):
+        return self.nombre_con
     class Meta:
         managed = False
         db_table = 'configuracion'
@@ -56,7 +59,8 @@ class Consumo(models.Model):
     fecha_actualizacion_consumo = models.DateTimeField(blank=True, null=True)
     numero_mes_consumo = models.IntegerField(blank=True, null=True)
     fecha_vencimiento_consumo = models.DateField(blank=True, null=True)
-
+    def __str__(self):
+        return f"{self.anio_consumo} - {self.mes_consumo}"
     class Meta:
         managed = False
         db_table = 'consumo'
@@ -71,7 +75,8 @@ class Detalle(models.Model):
     valor_unitario_det = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     subtotal_det = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     iva_det = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-
+    def __str__(self):
+        return self.detalle_det
     class Meta:
         managed = False
         db_table = 'detalle'
@@ -83,7 +88,8 @@ class Evento(models.Model):
     fecha_hora_eve = models.DateTimeField(blank=True, null=True)
     lugar_eve = models.CharField(max_length=250, blank=True, null=True)
     fk_id_te = models.ForeignKey('TipoEvento', models.DO_NOTHING, db_column='fk_id_te', blank=True, null=True)
-
+    def __str__(self):
+        return self.descripcion_eve
     class Meta:
         managed = False
         db_table = 'evento'
@@ -97,6 +103,8 @@ class Excedente(models.Model):
     tarifa_ex = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     fecha_actualizacion_ex = models.DateTimeField(blank=True, null=True)
     fecha_creacion_ex = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return f"{self.limite_minimo_ex} - {self.limite_maximo_ex}"
 
     class Meta:
         managed = False
@@ -113,7 +121,8 @@ class HistorialPropietario(models.Model):
     fecha_cambio_his = models.DateTimeField(blank=True, null=True)
     creacion_his = models.DateTimeField(blank=True, null=True)
     propietario_actual_his = models.CharField(max_length=15, blank=True, null=True)
-
+    def __str__(self):
+        return f"{self.fk_id_med} - {self.fk_id_soc}"
     class Meta:
         managed = False
         db_table = 'historial_propietario'
@@ -128,7 +137,8 @@ class Impuesto(models.Model):
     estado_imp = models.CharField(max_length=50, blank=True, null=True)
     creacion_imp = models.DateTimeField(blank=True, null=True)
     actualizacion_imp = models.DateTimeField(blank=True, null=True)
-
+    def __str__(self):
+        return self.nombre_imp
     class Meta:
         managed = False
         db_table = 'impuesto'
@@ -145,6 +155,8 @@ class Lectura(models.Model):
     fecha_actualizacion_lec = models.DateTimeField(blank=True, null=True)
     fk_id_his = models.ForeignKey(HistorialPropietario, models.DO_NOTHING, db_column='fk_id_his', blank=True, null=True)
     fk_id_consumo = models.ForeignKey(Consumo, models.DO_NOTHING, db_column='fk_id_consumo', blank=True, null=True)
+    def __str__(self):
+        return f"{self.anio_lec} - {self.mes_lec}"
 
     class Meta:
         managed = False
@@ -164,7 +176,8 @@ class Medidor(models.Model):
     creacion_med = models.DateTimeField(blank=True, null=True)
     actualizacion_med = models.DateTimeField(blank=True, null=True)
     lectura_inicial_med = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-
+    def __str__(self):
+        return self.numero_med
     class Meta:
         managed = False
         db_table = 'medidor'
@@ -177,7 +190,8 @@ class Perfil(models.Model):
     estado_per = models.CharField(max_length=25, blank=True, null=True)
     creacion_per = models.DateTimeField(blank=True, null=True)
     actualizacion_per = models.DateTimeField(blank=True, null=True)
-
+    def __str__(self):
+        return self.nombre_per
     class Meta:
         managed = False
         db_table = 'perfil'
@@ -201,7 +215,8 @@ class Recaudacion(models.Model):
     fecha_emision_rec = models.DateTimeField(blank=True, null=True)
     fecha_creacion_rec = models.DateTimeField(blank=True, null=True)
     fecha_actualizacion_rec = models.DateTimeField(blank=True, null=True)
-
+    def __str__(self):
+        return self.estado_rec
     class Meta:
         managed = False
         db_table = 'recaudacion'
@@ -212,7 +227,8 @@ class Ruta(models.Model):
     nombre_rut = models.CharField(max_length=500, blank=True, null=True)
     descripcion_rut = models.TextField(blank=True, null=True)
     estado_rut = models.CharField(max_length=25, blank=True, null=True)
-
+    def __str__(self):
+        return self.nombre_rut
     class Meta:
         managed = False
         db_table = 'ruta'
@@ -233,7 +249,8 @@ class Socio(models.Model):
     discapacidad_soc = models.CharField(max_length=25, blank=True, null=True)
     fk_id_usu = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='fk_id_usu', blank=True, null=True)
     estado_soc = models.CharField(max_length=50, blank=True, null=True)
-
+    def __str__(self):
+        return self.identificacion_soc
     class Meta:
         managed = False
         db_table = 'socio'
@@ -248,7 +265,8 @@ class Tarifa(models.Model):
     tarifa_basica_tar = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     tarifa_excedente_tar = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     valor_mora_tar = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-
+    def __str__(self):
+        return self.id_tar
     class Meta:
         managed = False
         db_table = 'tarifa'
@@ -260,6 +278,8 @@ class TipoEvento(models.Model):
     estado_te = models.CharField(max_length=50, blank=True, null=True)
     creacion_te = models.DateTimeField(blank=True, null=True)
     actualizacion_te = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return self.id_te
 
     class Meta:
         managed = False
@@ -274,7 +294,8 @@ class Usuario(models.Model):
     password_usu = models.CharField(max_length=500, blank=True, null=True)
     estado_usu = models.CharField(max_length=25, blank=True, null=True)
     fk_id_per = models.ForeignKey(Perfil, models.DO_NOTHING, db_column='fk_id_per', blank=True, null=True)
-
+    def __str__(self):
+        return self.id_usu
     class Meta:
         managed = False
         db_table = 'usuario'
