@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)_sf&!d3@60c6*4u!ah-utrg9sm666@r9_nih$%kp7w=!1sq)x'
+SECRET_KEY = 'django-insecure-$u70l*0!w+3s@*rm$o=1px1g%#(9kcu!oyuae5cpsy_mg8z3a$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Aplicaciones.administracion',
 ]
 
 MIDDLEWARE = [
@@ -73,13 +74,22 @@ WSGI_APPLICATION = 'yaku.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yaku_2425',
+        'USER': 'root',
+        'PASSWORD': '2602',
+        'HOST': 'localhost',  # o la dirección de tu servidor MySQL
+        'PORT': '3306',       # el puerto por defecto de MySQL
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
