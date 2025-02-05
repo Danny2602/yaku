@@ -10,40 +10,10 @@ class RecaudacionAdmin(admin.ModelAdmin):
     list_filter = ('estado_rec', 'fecha_emision_rec', 'fecha_creacion_rec', 'fecha_actualizacion_rec')
     search_fields = ('id_rec', 'numero_factura_rec', 'numero_autorizacion_rec', 'fecha_hora_autorizacion_rec', 'ambiente_rec', 'emision_rev', 'clave_acceso_rec', 'email_rec', 'observacion_rec', 'fk_id_soc__identificacion_soc', 'nombre_rec', 'identificacion_rec', 'direccion_rec', 'estado_rec', 'fecha_emision_rec', 'fecha_creacion_rec', 'fecha_actualizacion_rec')
 
-    change_list_template = "admin/recaudacion_changelist.html"
-
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('open-modal/', self.admin_site.admin_view(self.open_modal), name='open-modal'),
-        ]
-        return custom_urls + urls
-
-    def open_modal(self, request):
-        context = dict(
-            self.admin_site.each_context(request),
-        )
-        return TemplateResponse(request, "admin/recaudacion_modal.html", context)
-
 class AsistenciaAdmin(admin.ModelAdmin):
     list_display = ('id_asi', 'fk_id_eve', 'fk_id_soc', 'tipo_asi', 'valor_asi', 'atraso_asi', 'valor_atraso_asi', 'creacion_asi', 'actualizacion_asi')
     list_filter = ('tipo_asi', 'creacion_asi', 'actualizacion_asi')
     search_fields = ('id_asi', 'fk_id_eve__descripcion_eve', 'fk_id_soc__identificacion_soc', 'tipo_asi', 'valor_asi', 'atraso_asi', 'valor_atraso_asi', 'creacion_asi', 'actualizacion_asi')
-
-    change_list_template = "admin/asistencia_changelist.html"
-
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('open-modal/', self.admin_site.admin_view(self.open_modal), name='open-modal'),
-        ]
-        return custom_urls + urls
-
-    def open_modal(self, request):
-        context = dict(
-            self.admin_site.each_context(request),
-        )
-        return TemplateResponse(request, "admin/asistencia_modal.html", context)
 
 class ComunicadoAdmin(admin.ModelAdmin):
     list_display = ('id_com', 'fecha_com', 'mensaje_com', 'actualizacion_com', 'creacion_com')
