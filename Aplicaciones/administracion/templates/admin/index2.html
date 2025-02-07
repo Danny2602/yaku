@@ -3,40 +3,39 @@
 {% load static %}
 
 {% block content %}
-<style media="print">
-    @media print {
-        button, a.btn, .breadcrumbs, .module, .app-admin, .app-administration, .dashboard-module, .dashboard-title, .user-tools, .nav-global, .nav-sidebar a{
-            display: none !important;
-        }
-        .print-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .print-container .col-md-6 {
-            width: 50%;
-        }
-    }
-</style>
 <div class="container mt-3">
+    <style media="print">
+        @media print {
+            button, a.btn, .breadcrumbs, .module, .app-admin, .app-administration, .dashboard-module, .dashboard-title, .user-tools, .nav-global, .nav-sidebar a{
+                display: none !important;
+            }
+            .print-container {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .print-container .col-md-6 {
+                width: 50%;
+            }
+        }
+    </style>
+    <h5>Dashboards</h5>
     <center>
         <button class="btn btn-outline-primary" onclick='window.print()'>Imprimir</button>
-        <a href="{% url 'admin:dashboard_dos' %}" class="btn btn-outline-secondary">Dashboard Dos</a>
     </center>
-    <h5>Dashboards</h5>
     <div class="row mt-3 print-container">
-        <div class="col-md-6" >
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Asistencia por tipo</h6>
-                    <canvas id="asistenciaChart" class="w-150" height="200"></canvas>
+                    <h6 class="card-title">Configuraciones por Año</h6>
+                    <canvas id="configuraciones_by_anio" class="w-150" height="200"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Gráfica Anual</h6>
-                    <canvas id="asistenciaAnualChart" class="w-150" height="200"></canvas>
+                    <h6 class="card-title">Meses con mas consumo</h6>
+                    <canvas id="lectura_by_estado" class="w-150" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -45,27 +44,26 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Recaudación por Año</h6>
-                    <canvas id="recaudacion_by_anio" class="w-150" height="200"></canvas>
+                    <h6 class="card-title">Eventos por Año</h6>
+                    <canvas id="eventos_by_anio" class="w-150" height="200"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Comunicado por cada mes</h6>
-                    <canvas id="comunicados_by_mes" class="w-150" height="200"></canvas>
+                    <h6 class="card-title">Excedentes por Tarifa</h6>
+                    <canvas id="excedentes_by_tarifa" class="w-150" height="200"></canvas>
                 </div>
             </div>
         </div>
-        
     </div>
-    <div class="row mt-3 print-container">
+    <div class="row mt-3 print-containers">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Estado del consumo</h6>
-                    <canvas id="consumo_by_estado" class="w-150" height="200"></canvas>
+                    <h6 class="card-title">Historial por Estado</h6>
+                    <canvas id="historial_by_estado" class="w-150" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -77,27 +75,27 @@
 <script>
     
     document.addEventListener("DOMContentLoaded", function(){
-        var ctx1 = document.getElementById('asistenciaChart').getContext('2d');
-        var ctx2 = document.getElementById('asistenciaAnualChart').getContext('2d');
-        var ctx3 = document.getElementById('recaudacion_by_anio').getContext('2d');
-        var ctx4 = document.getElementById('consumo_by_estado').getContext('2d');
-        var ctx5 = document.getElementById('comunicados_by_mes').getContext('2d');
+        var ctx1 = document.getElementById('configuraciones_by_anio').getContext('2d');
+        var ctx2 = document.getElementById('lectura_by_estado').getContext('2d');
+        var ctx3 = document.getElementById('eventos_by_anio').getContext('2d');
+        var ctx4 = document.getElementById('excedentes_by_tarifa').getContext('2d');
+        var ctx5 = document.getElementById('historial_by_estado').getContext('2d');
 
         // Cargar los datos de las gráficas al cargar la página
-        loadChartData();
-        loadChartDataAnual();
-        loadChartRecaudacion();
-        loadChartConsumoByEstado();
-        loadChartComunicadosByMes();
+        loadChartConfiguracionesByAnio();
+        loadChartLecturaByEstado();
+        loadChartEventosByAnio();
+        loadChartExcedentesByTarifa();
+        loadChartHistorialByEstado();
         
-        function loadChartData(){
+        function loadChartConfiguracionesByAnio(){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "{% url 'asistencia_by_tipo' %}?data=1");
+            xhr.open("GET", "{% url 'configuraciones_by_anio' %}?data=1");
             xhr.onreadystatechange = function(){
                 if(xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        updateChart(response);
+                        updateChartConfiguracionesByAnio(response);
                     } else {
                         console.error("Error al cargar datos.");
                     }
@@ -106,14 +104,14 @@
             xhr.send();
         }
 
-        function loadChartDataAnual(){
+        function loadChartLecturaByEstado(){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "{% url 'asistencia_anual' %}?data=1");
+            xhr.open("GET", "{% url 'lectura_by_estado' %}?data=1");
             xhr.onreadystatechange = function(){
                 if(xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        updateChartAnual(response);
+                        updateChartLecturaByEstado(response);
                     } else {
                         console.error("Error al cargar datos");
                     }
@@ -122,14 +120,14 @@
             xhr.send();
         }
 
-        function loadChartRecaudacion(){
+        function loadChartEventosByAnio(){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "{% url 'recaudacion_by_anio' %}?data=1");
+            xhr.open("GET", "{% url 'eventos_by_anio' %}?data=1");
             xhr.onreadystatechange = function(){
                 if(xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        updateAnualByRecaudacion(response);
+                        updateChartEventosByAnio(response);
                     } else {
                         console.error("Error al cargar datos");
                     }
@@ -138,14 +136,14 @@
             xhr.send();
         }
 
-        function loadChartConsumoByEstado(){
+        function loadChartExcedentesByTarifa(){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "{% url 'consumo_by_estado' %}?data=1");
+            xhr.open("GET", "{% url 'excedentes_by_tarifa' %}?data=1");
             xhr.onreadystatechange = function(){
                 if(xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        updateConsumoByEstado(response);
+                        updateChartExcedentesByTarifa(response);
                     } else {
                         console.error("Error al cargar datos");
                     }
@@ -153,14 +151,15 @@
             };
             xhr.send();
         }
-        function loadChartComunicadosByMes(){
+
+        function loadChartHistorialByEstado(){
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "{% url 'comunicados_by_mes' %}?data=1");
+            xhr.open("GET", "{% url 'historial_by_estado' %}?data=1");
             xhr.onreadystatechange = function(){
                 if(xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        updateComunicadosByMes(response);
+                        updateChartHistorialByEstado(response);
                     } else {
                         console.error("Error al cargar datos");
                     }
@@ -168,47 +167,14 @@
             };
             xhr.send();
         }
-        function updateChart(data){
+
+        function updateChartConfiguracionesByAnio(data){
             var myChart1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: data.tipo,
-                    datasets: [{
-                        label: 'Valor de Asistencias',
-                        data: data.total,
-                        backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
-                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Valor de Asistencias'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tipo de Asistencia'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateChartAnual(data){
-            var myChart2 = new Chart(ctx2, {
-                type: 'line',
-                data: {
                     labels: data.anios,
                     datasets: [{
-                        label: 'Valor de Asistencias Anuales',
+                        label: 'Configuraciones por Año',
                         data: data.total,
                         backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
                         borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
@@ -222,7 +188,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Valor de Asistencias Anuales'
+                                text: 'Configuraciones'
                             }
                         },
                         x: {
@@ -236,80 +202,50 @@
             });
         }
 
-        function updateAnualByRecaudacion(data){
-            var myChart3 = new Chart(ctx3, {
-                type: 'pie',
-                data: {
-                    labels: data.anio,
-                    datasets: [{
-                        label: 'Recaudación Anual por Año',
-                        data: data.total,
-                        backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
-                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Recaudación Anual'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Año'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateConsumoByEstado(data){
-            var myChart4 = new Chart(ctx4, {
+        function updateChartLecturaByEstado(data){
+            var myChart2 = new Chart(ctx2, {
                 type: 'bar',
-                data: {
-                    labels: data.estados,
-                    datasets: [{
-                        label: 'Valor de Asistencias',
-                        data: data.total,
-                        backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
-                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Valor de Asistencias'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tipo de Asistencia'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        function updateComunicadosByMes(data){
-            var myChart5 = new Chart(ctx5, {
-                type: 'doughnut',// 'line', 'bar', 'radar', 'doughnut', 'polarArea', 'bubble', 'scatter'
                 data: {
                     labels: data.meses,
                     datasets: [{
-                        label: 'meses',
+                        label: 'Detalle por Recaudación',
+                        data: data.total,
+                        backgroundColor: [ '#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED',
+                        '#8E44AD', '#3498DB', '#1ABC9C', '#F39C12', '#D35400',
+                        '#C0392B', '#7F8C8D', '#2ECC71', '#9B59B6', '#34495E',
+                        '#16A085', '#27AE60'],
+                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Detalle'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Recaudación'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartEventosByAnio(data){
+            var myChart3 = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: data.anios,
+                    datasets: [{
+                        label: 'Eventos por Año',
                         data: data.total,
                         backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
                         borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
@@ -323,13 +259,81 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Valor de Asistencias'
+                                text: 'Eventos'
                             }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: 'Tipo de Asistencia'
+                                text: 'Año'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartExcedentesByTarifa(data){
+            var myChart4 = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: data.tarifas,
+                    datasets: [{
+                        label: 'Excedentes por Tarifa',
+                        data: data.total,
+                        backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
+                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Excedentes'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tarifa'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartHistorialByEstado(data){
+            var myChart5 = new Chart(ctx5, {
+                type: 'doughnut',
+                data: {
+                    labels: data.estados,
+                    datasets: [{
+                        label: 'Historial por Estado',
+                        data: data.total,
+                        backgroundColor: ['#96ac60', '#FF6565', '#4BC0C0', '#FFCE56', '#E7E9ED'],
+                        borderColor: ['green', 'red', 'blue', 'yellow', 'gray'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Historial'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Estado'
                             }
                         }
                     }

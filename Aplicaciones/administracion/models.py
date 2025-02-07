@@ -266,7 +266,7 @@ class Tarifa(models.Model):
     tarifa_excedente_tar = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     valor_mora_tar = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     def __str__(self):
-        return self.id_tar
+        return str(self.id_tar)  # Asegúrate de devolver una cadena
     class Meta:
         managed = False
         db_table = 'tarifa'
@@ -279,7 +279,7 @@ class TipoEvento(models.Model):
     creacion_te = models.DateTimeField(blank=True, null=True)
     actualizacion_te = models.DateTimeField(blank=True, null=True)
     def __str__(self):
-        return self.id_te
+        return self.nombre_te 
 
     class Meta:
         managed = False
@@ -295,7 +295,7 @@ class Usuario(models.Model):
     estado_usu = models.CharField(max_length=25, blank=True, null=True)
     fk_id_per = models.ForeignKey(Perfil, models.DO_NOTHING, db_column='fk_id_per', blank=True, null=True)
     def __str__(self):
-        return self.id_usu
+        return f"{self.nombre_usu} {self.apellido_usu}"  # Asegúrate de devolver una cadena
     class Meta:
         managed = False
         db_table = 'usuario'
